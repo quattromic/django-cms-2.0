@@ -75,6 +75,9 @@ class ToolbarMiddleware(object):
                 request.session['cms_edit'] = True
 
     def process_response(self, request, response):
+        # Avoid altering gziped content if we've got a content-encoding.
+        if response.has_header('Content-Encoding'):
+            return response
         if self.show_toolbar(request, response):
             response.content = inster_after_tag(smart_unicode(response.content), u'body', smart_unicode(self.render_toolbar(request)))
         return response

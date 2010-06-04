@@ -18,6 +18,9 @@ class PlaceholderMediaMiddleware(object):
             return False
         if response.status_code != 200:
             return False 
+        # Avoid altering gziped content if we've got a content-encoding.
+        if response.has_header('Content-Encoding'):
+            return False
         if not response['Content-Type'].split(';')[0] in HTML_TYPES:
             return False
         if request.path_info.startswith(settings.MEDIA_URL):

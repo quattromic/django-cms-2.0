@@ -68,7 +68,8 @@ class MultilingualURLMiddleware:
         if not path.startswith(settings.MEDIA_URL) and \
                 not path.startswith(settings.ADMIN_MEDIA_PREFIX) and \
                 response.status_code == 200 and \
-                response._headers['content-type'][1].split(';')[0] == "text/html":
+                response._headers['content-type'][1].split(';')[0] == "text/html" and \
+                not response.has_header('Content-Encoding'):
             try:
                 decoded_response = response.content.decode('utf-8')
             except UnicodeDecodeError:
